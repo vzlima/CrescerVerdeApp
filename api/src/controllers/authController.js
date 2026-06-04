@@ -147,12 +147,9 @@ const resetPassword = async (req, res) => {
   }
 };
 
-module.exports = { register, login, forgotPassword, resetPassword, logout };
-
 const logout = async (req, res) => {
   try {
     const sessionDuration = parseInt(req.body?.sessionDuration) || null;
-    // req.user é injetado pelo authMiddleware
     if (req.user?.id) {
       logEvent(req.user.id, 'logout', {}, sessionDuration);
     }
@@ -161,3 +158,5 @@ const logout = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+module.exports = { register, login, forgotPassword, resetPassword, logout };
