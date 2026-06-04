@@ -24,9 +24,9 @@ function isLocked(course) {
 
 function diffBadge(diff) {
   const map = {
-    iniciante:    '<span class="diff-badge badge-iniciante">🟢 Iniciante</span>',
-    intermediario:'<span class="diff-badge badge-inter">🔵 Intermediário</span>',
-    avancado:     '<span class="diff-badge badge-avanc">🔴 Avançado</span>',
+    iniciante:    '<span class="diff-badge badge-iniciante">Iniciante</span>',
+    intermediario:'<span class="diff-badge badge-inter">Intermediário</span>',
+    avancado:     '<span class="diff-badge badge-avanc">Avançado</span>',
   };
   return map[diff] || '';
 }
