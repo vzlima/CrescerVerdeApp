@@ -6,23 +6,22 @@ const adminMiddleware = require('../middlewares/adminMiddleware');
 
 router.use(authMiddleware);
 
-// Self-service — deve vir ANTES do /:id para não ser capturado como param
+// Self-service — deve vir ANTES de /:id para não ser capturado como param
 router.get('/me',          userController.getMe);
 router.put('/me',          userController.updateMe);
 router.put('/me/password', userController.changeMyPassword);
 router.delete('/me',       userController.deleteMe);
 
-// Guardian — própria autorização no controller
+// Guardian — autorização própria no controller
 router.get('/:id/guardian-view', userController.guardianView);
 router.put('/:id/time-limit',    userController.setTimeLimit);
 
-// Admin-only
-router.use(adminMiddleware);
-router.post('/',              userController.create);
-router.get('/',               userController.list);
-router.get('/:id',            userController.get);
-router.put('/:id',            userController.update);
-router.put('/:id/password',   userController.changePassword);
-router.delete('/:id',         userController.delete);
+// Admin-only — adminMiddleware aplicado individualmente
+router.post('/',            adminMiddleware, userController.create);
+router.get('/',             adminMiddleware, userController.list);
+router.get('/:id',          adminMiddleware, userController.get);
+router.put('/:id',          adminMiddleware, userController.update);
+router.put('/:id/password', adminMiddleware, userController.changePassword);
+router.delete('/:id',       adminMiddleware, userController.delete);
 
 module.exports = router;
