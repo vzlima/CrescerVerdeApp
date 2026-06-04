@@ -1,3 +1,40 @@
+/* ── Toast global (substitui alert()) ── */
+window.showToast = function (msg, type = "error") {
+  const existing = document.getElementById("cv-toast");
+  if (existing) existing.remove();
+
+  const colors = {
+    error:   { bg: "#b71c1c", icon: "fa-circle-xmark" },
+    success: { bg: "#1b5e20", icon: "fa-circle-check" },
+    info:    { bg: "#1565c0", icon: "fa-circle-info" },
+    warning: { bg: "#e65100", icon: "fa-triangle-exclamation" },
+  };
+  const { bg, icon } = colors[type] || colors.error;
+
+  const toast = document.createElement("div");
+  toast.id = "cv-toast";
+  toast.style.cssText = [
+    "position:fixed", "bottom:28px", "left:50%", "transform:translateX(-50%)",
+    `background:${bg}`, "color:#fff", "padding:14px 22px", "border-radius:12px",
+    "z-index:99999", "font-weight:600", "font-size:0.95rem",
+    "box-shadow:0 4px 20px rgba(0,0,0,0.3)", "display:flex", "align-items:center",
+    "gap:10px", "max-width:90vw", "pointer-events:none",
+    "animation:cv-toast-in 0.2s ease",
+  ].join(";");
+
+  toast.innerHTML = `<i class="fas ${icon}"></i><span>${msg}</span>`;
+  document.body.appendChild(toast);
+
+  if (!document.getElementById("cv-toast-style")) {
+    const s = document.createElement("style");
+    s.id = "cv-toast-style";
+    s.textContent = "@keyframes cv-toast-in{from{opacity:0;transform:translateX(-50%) translateY(12px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}";
+    document.head.appendChild(s);
+  }
+
+  setTimeout(() => toast?.remove(), 3500);
+};
+
 /* ── Interceptor de fetch para sessão expirada ── */
 const originalFetch = window.fetch;
 window.fetch = async function () {
@@ -7,16 +44,14 @@ window.fetch = async function () {
     try {
       const data = await clone.json();
       if (data.expired) {
-        alert("Sua sessão expirou. Por favor, faça login novamente.");
+        showToast("Sua sessão expirou. Faça login novamente.", "warning");
         localStorage.removeItem("user");
         localStorage.removeItem("token");
         if (!window.location.pathname.endsWith("/login.html")) {
           window.location.href = "/HTML/login.html";
         }
       }
-    } catch (e) {
-      // ignorar erros de parse JSON
-    }
+    } catch (e) {}
   }
   return response;
 };

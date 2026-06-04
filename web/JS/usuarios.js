@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   try {
     const user = JSON.parse(userStr);
     if (user.role !== "admin") {
-      alert("Acesso negado. Apenas administradores podem acessar esta página.");
+      showToast("Acesso negado. Apenas administradores.", "warning");
       window.location.href = "/index.html";
       return;
     }
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
             copyBtn.classList.replace('btn-success', 'btn-dark');
             setTimeout(() => { copyBtn.innerHTML = orig; copyBtn.classList.replace('btn-dark', 'btn-success'); }, 2000);
           })
-          .catch(() => alert("Erro ao copiar senha."));
+          .catch(() => showToast("Erro ao copiar senha."));
       }
     });
   }
@@ -284,7 +284,7 @@ async function handleUserFormSubmit(e) {
     const res  = await fetch(url, { method, headers: getAuthHeaders(), body: JSON.stringify(payload) });
     const data = await res.json();
 
-    if (!res.ok) { alert(`Erro: ${data.error || data.message || 'Falha ao salvar'}`); return; }
+    if (!res.ok) { showToast(`Erro: ${data.error || data.message || 'Falha ao salvar'}`); return; }
 
     const savedId = isUpdate ? id : (data.user?._id || null);
 
@@ -326,7 +326,7 @@ async function handleUserFormSubmit(e) {
     }
 
     loadUsers();
-  } catch { alert("Erro de conexão ao salvar usuário."); }
+  } catch { showToast("Erro de conexão ao salvar usuário."); }
 }
 
 /* ── Change Password ── */
@@ -361,8 +361,8 @@ async function executeDeleteUser() {
     const res  = await fetch(`${API_BASE_URL}/users/${currentUserIdToDelete}`, { method: "DELETE", headers: getAuthHeaders() });
     const data = await res.json();
     if (res.ok) { bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide(); showMessage("success", "Usuário removido com sucesso!"); loadUsers(); }
-    else alert(`Erro: ${data.error || 'Falha ao deletar'}`);
-  } catch { alert("Erro de conexão ao deletar usuário."); }
+    else showToast(`Erro: ${data.error || 'Falha ao deletar'}`);
+  } catch { showToast("Erro de conexão ao deletar usuário."); }
   finally { currentUserIdToDelete = null; }
 }
 

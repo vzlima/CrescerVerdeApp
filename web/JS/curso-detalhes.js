@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   currentCourseId = urlParams.get('id');
 
   if (!currentCourseId) {
-    alert("Curso não encontrado.");
+    showToast("Curso não encontrado.");
     window.location.href = "/HTML/cursos.html";
     return;
   }
@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", () => {
       isAdmin = currentUser.role === 'admin';
     } catch (e) { console.error(e); }
   } else {
-    alert("Você precisa estar logado para acessar os detalhes do curso.");
     window.location.href = "/HTML/login.html";
     return;
   }
@@ -236,7 +235,7 @@ window.markContentCompleted = async function () {
       renderContentList();
       checkFullCompletion();
     } else {
-      alert("Erro ao marcar como concluído.");
+      showToast("Erro ao marcar como concluído.");
     }
   } catch (err) {
     console.error(err);
@@ -289,7 +288,7 @@ window.concluirCurso = async function () {
     }
   } catch (err) {
     console.error(err);
-    alert("Erro ao emitir certificado.");
+    showToast("Erro ao emitir certificado.");
     if (btn) {
       btn.disabled = false;
       btn.textContent = "Concluir Curso";
@@ -332,7 +331,7 @@ async function printCertificate() {
     printWindow.document.write(templateText);
     printWindow.document.close();
   } else {
-    alert("Por favor, permita pop-ups para imprimir o certificado.");
+    showToast("Permita pop-ups para imprimir o certificado.", "warning");
   }
 }
 
@@ -420,7 +419,7 @@ window.deleteContent = async function () {
       bootstrap.Modal.getInstance(modalElement).hide();
       loadContentsAndProgress();
     } else {
-      alert("Erro ao excluir conteúdo.");
+      showToast("Erro ao excluir conteúdo.");
     }
   } catch (err) {
     console.error(err);

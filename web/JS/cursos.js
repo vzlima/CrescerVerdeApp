@@ -88,7 +88,7 @@ window.deleteCourse = async function () {
   if (!confirm("Tem certeza que deseja excluir permanentemente este curso?")) return;
 
   const token = localStorage.getItem("token");
-  if (!token) return alert("Usuário não autenticado.");
+  if (!token) return showToast("Usuário não autenticado.", "warning");
 
   try {
     const response = await fetch(`${API_BASE}/api/courses/${courseId}`, {
@@ -105,11 +105,11 @@ window.deleteCourse = async function () {
       loadCourses();
     } else {
       const data = await response.json();
-      alert(data.error || "Erro ao deletar curso");
+      showToast(data.error || "Erro ao deletar curso");
     }
   } catch (error) {
     console.error("Error deleting course", error);
-    alert("Erro de conexão com o servidor ao excluir.");
+    showToast("Erro de conexão com o servidor ao excluir.");
   }
 };
 

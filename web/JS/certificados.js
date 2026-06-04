@@ -81,14 +81,14 @@ window.printCertificate = async function (certificateId) {
     });
 
     if (!certRes.ok) {
-        alert("Certificado não encontrado");
+        showToast("Certificado não encontrado.");
         return;
     }
 
     const certificate = await certRes.json();
     const res = await fetch("/HTML/template-certificate.html");
     if (!res.ok) {
-        alert("Erro ao carregar template do certificado.");
+        showToast("Erro ao carregar template do certificado.");
         return;
     }
 
@@ -115,6 +115,6 @@ window.printCertificate = async function (certificateId) {
         printWindow.document.write(templateText);
         printWindow.document.close();
     } else {
-        alert("Por favor, permita pop-ups para imprimir o certificado.");
+        showToast("Permita pop-ups para imprimir o certificado.", "warning");
     }
 };

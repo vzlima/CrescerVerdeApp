@@ -69,9 +69,48 @@
   flex-direction: column;
 }
 
-.plan-icon { font-size: 2.2rem; margin-bottom: 10px; }
+.plan-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  font-size: 1.6rem;
+}
 
-.plan-name {
+.plan-icon.free    { background: #e8f5e9; color: var(--plan-free); }
+.plan-icon.familia { background: #e3f2fd; color: var(--plan-familia); }
+.plan-icon.escola  { background: #f3e5f5; color: var(--plan-escola); }
+
+.plan-features li.yes::before {
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  content: '\f00c';
+  color: #27ae60;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.plan-features li.no::before {
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  content: '\f00d';
+  color: #ccc;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.plans-header h1 i {
+  color: #a5d6a7;
+  margin-right: 10px;
+}
+
+.plan-badge i {
+  margin-right: 4px;
+  font-size: 0.7rem;
+}
   font-family: 'Nunito', sans-serif;
   font-weight: 900;
   font-size: 1.25rem;

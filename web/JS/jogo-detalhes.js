@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   currentCourseId = urlParams.get('id');
 
   if (!currentCourseId) {
-    alert("Jogo não encontrado.");
+    showToast("Jogo não encontrado.");
     window.location.href = "/HTML/jogos.html";
     return;
   }
@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", () => {
       isAdmin = currentUser.role === 'admin';
     } catch (e) {}
   } else {
-    alert("Você precisa estar logado para acessar os detalhes do jogo.");
     window.location.href = "/HTML/login.html";
     return;
   }
@@ -230,10 +229,10 @@ window.markContentCompleted = async function () {
       renderContentList();
       checkFullCompletion();
     } else {
-      alert("Erro ao marcar como concluído.");
+      showToast("Erro ao marcar como concluído.");
     }
   } catch (err) {
-    alert("Erro ao marcar como concluído.");
+    showToast("Erro ao marcar como concluído.");
   }
 };
 
@@ -279,7 +278,7 @@ window.concluirCurso = async function () {
       btn.onclick = printCertificate; // Imprimir de novo
     }
   } catch (err) {
-    alert("Erro ao emitir certificado.");
+    showToast("Erro ao emitir certificado.");
     if (btn) {
       btn.disabled = false;
       btn.textContent = "Concluir Jogo";
@@ -322,7 +321,7 @@ async function printCertificate() {
     printWindow.document.write(templateText);
     printWindow.document.close();
   } else {
-    alert("Por favor, permita pop-ups para imprimir o certificado.");
+    showToast("Permita pop-ups para imprimir o certificado.", "warning");
   }
 }
 
@@ -411,9 +410,9 @@ window.deleteContent = async function () {
       bootstrap.Modal.getInstance(modalElement).hide();
       loadContentsAndProgress();
     } else {
-      alert("Erro ao excluir conteúdo.");
+      showToast("Erro ao excluir conteúdo.");
     }
   } catch (err) {
-    alert("Erro ao excluir conteúdo.");
+    showToast("Erro ao excluir conteúdo.");
   }
 };

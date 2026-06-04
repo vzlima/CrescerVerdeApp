@@ -182,7 +182,7 @@ window.deleteCourse = async function () {
   if (!id || !confirm("Excluir esta trilha permanentemente?")) return;
 
   const token = localStorage.getItem("token");
-  if (!token) return alert("Não autenticado.");
+  if (!token) return showToast("Não autenticado.", "warning");
 
   try {
     const res = await fetch(`${API_BASE}/api/courses/${id}`, {
@@ -194,9 +194,9 @@ window.deleteCourse = async function () {
       loadCourses();
     } else {
       const d = await res.json();
-      alert(d.error || "Erro ao deletar trilha.");
+      showToast(d.error || "Erro ao deletar trilha.");
     }
-  } catch { alert("Erro de conexão."); }
+  } catch { showToast("Erro de conexão."); }
 };
 
 /* ── DOMContentLoaded ── */
