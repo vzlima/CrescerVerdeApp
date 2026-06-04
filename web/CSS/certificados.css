@@ -115,3 +115,28 @@
 .login-link:hover {
   background: var(--cv-primary-dark);
 }
+
+@media (max-width: 576px) {
+  .container.my-5 {
+    padding: 20px !important;
+    border-radius: var(--r-md);
+  }
+
+  .page-title {
+    font-size: 1.3rem;
+  }
+
+  .cert-card {
+    padding: 16px;
+  }
+
+  .primary-text {
+    font-size: 1.15rem;
+    margin: 32px 0 16px;
+  }
+
+  .login-link {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+  }
+}

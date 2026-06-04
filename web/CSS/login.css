@@ -82,7 +82,8 @@
 }
 
 .form input[type="email"]:focus,
-.form input[type="password"]:focus {
+.form input[type="password"]:focus,
+.form input[type="text"]:focus {
   outline: none;
   border-color: var(--cv-primary);
   box-shadow: 0 0 0 3px var(--cv-primary-glow);
@@ -113,6 +114,12 @@
   filter: brightness(1.07);
 }
 
+.submit-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  filter: none;
+}
+
 .forgot-link,
 #forgot-password-link {
   display: block;
@@ -139,9 +146,174 @@
   font-size: 0.9rem;
 }
 
+/* ── Toggle Login ↔ Cadastro ─────────────────────────────── */
+.register-toggle-area {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--cv-text-muted);
+}
+
+.register-toggle-area a {
+  color: var(--cv-primary-dark);
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 4px;
+}
+
+.register-toggle-area a:hover {
+  text-decoration: underline;
+}
+
+/* ── Seletor de tipo de conta ─────────────────────────────── */
+.role-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.role-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 10px;
+  border: 2px solid var(--cv-gray-3);
+  border-radius: var(--r-md, 12px);
+  background: #fff;
+  cursor: pointer;
+  transition: border-color var(--t-fast), background var(--t-fast), box-shadow var(--t-fast);
+  text-align: center;
+}
+
+.role-card:hover {
+  border-color: var(--cv-primary-light);
+  background: var(--cv-primary-subtle);
+}
+
+.role-card--active {
+  border-color: var(--cv-primary);
+  background: var(--cv-primary-subtle);
+  box-shadow: 0 0 0 3px var(--cv-primary-glow);
+}
+
+.role-card__icon {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.role-card__label {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--cv-text);
+}
+
+.role-card__desc {
+  font-size: 0.75rem;
+  color: var(--cv-text-muted);
+  line-height: 1.3;
+}
+
+/* ── Campo de e-mail do responsável ──────────────────────── */
+.field-hint {
+  font-size: 0.78rem;
+  color: var(--cv-text-muted);
+  margin-top: -12px;
+  margin-bottom: 18px;
+  line-height: 1.4;
+}
+
+/* ── Checkbox de termos ───────────────────────────────────── */
+.terms-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.terms-check input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  accent-color: var(--cv-primary);
+  cursor: pointer;
+}
+
+.terms-check label {
+  font-size: 0.83rem;
+  color: var(--cv-text-muted);
+  font-weight: 400;
+  margin: 0;
+  cursor: pointer;
+}
+
+.terms-check label a {
+  color: var(--cv-primary-dark);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.terms-check label a:hover {
+  text-decoration: underline;
+}
+
+/* ── Mensagens de feedback do cadastro ───────────────────── */
+#register-error {
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  border-radius: var(--r-sm);
+  background: #ffebee;
+  color: #b71c1c;
+  font-size: 0.9rem;
+}
+
+#register-success {
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  border-radius: var(--r-sm);
+  background: #e8f5e9;
+  color: #1b5e20;
+  font-size: 0.9rem;
+}
+
 @media (max-width: 480px) {
   .form {
     padding: 28px 20px 24px;
+  }
+
+  .role-selector {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .role-card {
+    padding: 12px 8px;
+  }
+
+  .role-card__icon {
+    font-size: 1.5rem;
+  }
+}
+
+/* Phones muito pequenos (ex: iPhone SE 1ª geração, 320px) */
+@media (max-width: 360px) {
+  .role-selector {
+    grid-template-columns: 1fr;
+  }
+
+  .role-card {
+    flex-direction: row;
+    gap: 10px;
+    padding: 10px 12px;
+    text-align: left;
+    align-items: center;
+  }
+
+  .role-card__desc {
+    display: none;
   }
 }
 

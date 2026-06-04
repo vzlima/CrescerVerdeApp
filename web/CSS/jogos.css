@@ -215,10 +215,16 @@
   border-color: #27ae60;
 }
 
+/* ── Admin actions bar ──────────────────────────────────────── */
+.admin-actions-bar {
+  padding: 0 24px;
+}
+
 /* ── Mobile ─────────────────────────────────────────────────── */
 @media (max-width: 576px) {
-  .trails-grid   { padding: 0 12px 32px; gap: 14px; }
-  .trails-filter { padding: 0 12px 12px; }
-  .trail-emoji   { font-size: 2.4rem; padding: 16px 12px 6px; }
-  .trail-body    { padding: 6px 14px 14px; }
+  .trails-grid      { padding: 0 12px 32px; gap: 14px; }
+  .trails-filter    { padding: 0 12px 12px; }
+  .trail-emoji      { font-size: 2.4rem; padding: 16px 12px 6px; }
+  .trail-body       { padding: 6px 14px 14px; }
+  .admin-actions-bar { padding: 0 12px; }
 }

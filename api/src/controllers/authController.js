@@ -10,23 +10,37 @@ const register = async (req, res) => {
     const name = (req.body.name || '').trim();
     const email = (req.body.email || '').trim().toLowerCase();
     const password = (req.body.password || '').trim();
+    const role = req.body.role === 'guardian' ? 'guardian' : 'user';
+    const guardianEmail = (req.body.guardianEmail || '').trim().toLowerCase();
 
     if (!name) return res.status(400).json({ message: 'Nome é obrigatório.' });
     if (!EMAIL_RE.test(email)) return res.status(400).json({ message: 'E-mail inválido.' });
     if (password.length < 6) return res.status(400).json({ message: 'A senha deve ter pelo menos 6 caracteres.' });
 
+    // Aluno deve informar e-mail do responsável
+    if (role === 'user' && !EMAIL_RE.test(guardianEmail)) {
+      return res.status(400).json({ message: 'E-mail do responsável é obrigatório para alunos.' });
+    }
+
     if (await User.findOne({ email })) {
       return res.status(400).json({ message: 'E-mail já cadastrado.' });
     }
 
-    await User.create({
+    const userData = {
       name,
       email,
       password,
-      role: 'user',
+      role,
       acceptedTerms: true,
       acceptedTermsAt: new Date(),
-    });
+    };
+
+    if (role === 'user') {
+      userData.isMinor = true;
+      userData.guardianEmail = guardianEmail;
+    }
+
+    await User.create(userData);
 
     res.status(201).json({ message: 'Usuário criado com sucesso.' });
   } catch (err) {

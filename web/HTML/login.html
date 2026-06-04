@@ -43,6 +43,8 @@
     </nav>
 
     <div class="login-wrapper">
+
+      <!-- ── FORMULÁRIO DE LOGIN ── -->
       <form id="login-form" class="form">
         <div class="form-header">
           <div class="form-icon">🌱</div>
@@ -63,7 +65,75 @@
         </a>
 
         <div id="login-error" style="display: none"></div>
+
+        <div class="register-toggle-area">
+          <span>Não tem uma conta?</span>
+          <a href="#" id="show-register-link">Criar sua conta</a>
+        </div>
       </form>
+
+      <!-- ── FORMULÁRIO DE CADASTRO ── -->
+      <form id="register-form" class="form" style="display:none">
+        <div class="form-header">
+          <div class="form-icon">🌿</div>
+          <h2>Criar sua conta</h2>
+          <p>Escolha como você vai participar</p>
+        </div>
+
+        <!-- Seletor de tipo de conta -->
+        <div class="role-selector" id="role-selector">
+          <button type="button" class="role-card role-card--active" data-role="user">
+            <span class="role-card__icon">🎒</span>
+            <span class="role-card__label">Aluno</span>
+            <span class="role-card__desc">Quero aprender sobre sustentabilidade</span>
+          </button>
+          <button type="button" class="role-card" data-role="guardian">
+            <span class="role-card__icon">👨‍👩‍👦</span>
+            <span class="role-card__label">Responsável</span>
+            <span class="role-card__desc">Quero acompanhar meu filho ou aluno</span>
+          </button>
+        </div>
+
+        <label for="reg-name">Nome completo</label>
+        <input type="text" id="reg-name" placeholder="Seu nome" required />
+
+        <label for="reg-email">E-mail</label>
+        <input type="email" id="reg-email" placeholder="seu@email.com" required />
+
+        <!-- Campo exclusivo para Aluno -->
+        <div id="guardian-email-field">
+          <label for="reg-guardian-email">E-mail do responsável</label>
+          <input type="email" id="reg-guardian-email" placeholder="email.responsavel@exemplo.com" />
+          <p class="field-hint">Exigido pelo ECA Digital — o responsável receberá notificações da conta.</p>
+        </div>
+
+        <label for="reg-password">Senha</label>
+        <input type="password" id="reg-password" placeholder="Mínimo 6 caracteres" required />
+
+        <label for="reg-password-confirm">Confirmar senha</label>
+        <input type="password" id="reg-password-confirm" placeholder="Repita a senha" required />
+
+        <div class="terms-check">
+          <input type="checkbox" id="reg-terms" />
+          <label for="reg-terms">
+            Li e aceito os
+            <a href="#" data-terms-tab="uso">Termos de Uso</a>
+            e a
+            <a href="#" data-terms-tab="privacidade">Política de Privacidade</a>
+          </label>
+        </div>
+
+        <div id="register-error" style="display:none"></div>
+        <div id="register-success" style="display:none"></div>
+
+        <button type="submit" class="submit-btn" id="register-submit-btn">Criar conta</button>
+
+        <div class="register-toggle-area">
+          <span>Já tem uma conta?</span>
+          <a href="#" id="show-login-link">Entrar</a>
+        </div>
+      </form>
+
     </div>
 
     <!-- Modal: Esqueci minha senha -->
