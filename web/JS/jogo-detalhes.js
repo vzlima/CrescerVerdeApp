@@ -222,7 +222,6 @@ window.selectContent = function (contentId) {
       btn.className = "btn btn-secondary";
       btn.disabled = true;
     } else if (content.type === 'game') {
-      // Para jogos: aguarda postMessage do iframe antes de habilitar
       btn.textContent = "Complete o jogo para concluir";
       btn.className = "btn btn-warning";
       btn.disabled = true;
@@ -231,6 +230,9 @@ window.selectContent = function (contentId) {
       btn.className = "btn btn-success";
       btn.disabled = false;
     }
+  } else {
+    // Admin vê o jogo mas sem botão de progresso
+    document.getElementById("content-actions").style.display = "none";
   }
 };
 
