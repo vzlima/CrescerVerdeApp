@@ -146,7 +146,97 @@
   font-size: 0.9rem;
 }
 
-/* ── Toggle Login ↔ Cadastro ─────────────────────────────── */
+/* ── Show/hide e campo de senha ──────────────────────────── */
+.password-field {
+  position: relative;
+  margin-bottom: 18px;
+}
+
+.password-field input {
+  margin-bottom: 0 !important;
+  padding-right: 46px !important;
+}
+
+.toggle-pw {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--cv-gray-5, #888);
+  padding: 4px;
+  font-size: 0.95rem;
+  transition: color var(--t-fast);
+}
+
+.toggle-pw:hover { color: var(--cv-primary); }
+
+/* ── Indicador de força de senha ─────────────────────────── */
+.pw-strength {
+  height: 4px;
+  background: var(--cv-gray-2, #eee);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 6px;
+  margin-bottom: 4px;
+}
+
+.pw-strength__bar {
+  height: 100%;
+  width: 0;
+  border-radius: 2px;
+  transition: width 0.3s ease, background 0.3s ease;
+}
+
+.pw-strength__label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin: 0 0 14px;
+  min-height: 1em;
+}
+
+/* ── Botão gerar senha ───────────────────────────────────── */
+.generate-pw-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--cv-primary-subtle);
+  color: var(--cv-primary-dark);
+  border: 1.5px dashed var(--cv-primary-light);
+  border-radius: var(--r-sm);
+  font-size: 0.88rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 18px;
+  transition: background var(--t-fast), border-color var(--t-fast);
+  justify-content: center;
+}
+
+.generate-pw-btn:hover {
+  background: #d0f0da;
+  border-color: var(--cv-primary);
+}
+
+/* ── Ícone no form-icon (FA substituindo emoji) ───────────── */
+.form-icon i {
+  color: var(--cv-primary-dark);
+  font-size: 1.5rem;
+}
+
+/* ── Ícone nos role cards ────────────────────────────────── */
+.role-card__icon i {
+  font-size: 1.5rem;
+  color: var(--cv-primary-dark);
+}
+
+.role-card--active .role-card__icon i {
+  color: var(--cv-primary-darker, #1b5e20);
+}
 .register-toggle-area {
   margin-top: 20px;
   text-align: center;

@@ -16,6 +16,115 @@ document.addEventListener("DOMContentLoaded", () => {
         loginForm.style.display    = "block";
     });
 
+    // ── Show/hide senha ──────────────────────────────────────────────────────
+    document.querySelectorAll(".toggle-pw").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const input = document.getElementById(btn.dataset.target);
+            const icon  = btn.querySelector("i");
+            if (input.type === "password") {
+                input.type    = "text";
+                icon.classList.replace("fa-eye", "fa-eye-slash");
+                btn.setAttribute("aria-label", "Ocultar senha");
+            } else {
+                input.type    = "password";
+                icon.classList.replace("fa-eye-slash", "fa-eye");
+                btn.setAttribute("aria-label", "Mostrar senha");
+            }
+        });
+    });
+
+    // ── Gerador de senha segura ──────────────────────────────────────────────
+    function generatePassword() {
+        const upper   = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+        const lower   = "abcdefghijkmnpqrstuvwxyz";
+        const digits  = "23456789";
+        const special = "@#$%&*!";
+        const all     = upper + lower + digits + special;
+
+        // Garante pelo menos 1 de cada categoria
+        const required = [
+            upper[crypto.getRandomValues(new Uint32Array(1))[0] % upper.length],
+            lower[crypto.getRandomValues(new Uint32Array(1))[0] % lower.length],
+            digits[crypto.getRandomValues(new Uint32Array(1))[0] % digits.length],
+            special[crypto.getRandomValues(new Uint32Array(1))[0] % special.length],
+        ];
+
+        const rest = Array.from(crypto.getRandomValues(new Uint32Array(8)),
+            v => all[v % all.length]);
+
+        // Embaralha
+        const pw = [...required, ...rest];
+        for (let i = pw.length - 1; i > 0; i--) {
+            const j = crypto.getRandomValues(new Uint32Array(1))[0] % (i + 1);
+            [pw[i], pw[j]] = [pw[j], pw[i]];
+        }
+        return pw.join("");
+    }
+
+    document.getElementById("generate-pw-btn").addEventListener("click", () => {
+        const pw     = generatePassword();
+        const input  = document.getElementById("reg-password");
+        const confirm = document.getElementById("reg-password-confirm");
+
+        input.value   = pw;
+        confirm.value = pw;
+
+        // Mostra a senha gerada em texto para o usuário copiar
+        input.type   = "text";
+        confirm.type = "text";
+        document.querySelector('[data-target="reg-password"] i').classList.replace("fa-eye", "fa-eye-slash");
+        document.querySelector('[data-target="reg-password-confirm"] i').classList.replace("fa-eye", "fa-eye-slash");
+
+        updateStrength(pw);
+
+        // Copia para clipboard
+        navigator.clipboard?.writeText(pw).then(() => {
+            const btn = document.getElementById("generate-pw-btn");
+            btn.innerHTML = '<i class="fas fa-check"></i> Copiada!';
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-dice"></i> Gerar senha segura';
+            }, 2000);
+        });
+    });
+
+    // ── Indicador de força de senha ──────────────────────────────────────────
+    function scorePassword(pw) {
+        let score = 0;
+        if (pw.length >= 8)  score++;
+        if (pw.length >= 12) score++;
+        if (/[A-Z]/.test(pw)) score++;
+        if (/[a-z]/.test(pw)) score++;
+        if (/[0-9]/.test(pw)) score++;
+        if (/[@#$%&*!^()\-_=+]/.test(pw)) score++;
+        return score; // 0-6
+    }
+
+    function updateStrength(pw) {
+        const bar   = document.getElementById("pw-strength-bar");
+        const label = document.getElementById("pw-strength-label");
+        if (!bar || !label) return;
+
+        const score = scorePassword(pw);
+        const levels = [
+            { pct: 0,   color: "",          text: "" },
+            { pct: 16,  color: "#e53935",   text: "Muito fraca" },
+            { pct: 33,  color: "#ef6c00",   text: "Fraca" },
+            { pct: 50,  color: "#f9a825",   text: "Razoável" },
+            { pct: 66,  color: "#7cb342",   text: "Boa" },
+            { pct: 83,  color: "#2e7d32",   text: "Forte" },
+            { pct: 100, color: "#1b5e20",   text: "Muito forte" },
+        ];
+        const lvl = levels[Math.min(score, 6)];
+        bar.style.width      = lvl.pct + "%";
+        bar.style.background = lvl.color;
+        label.textContent    = pw.length ? lvl.text : "";
+        label.style.color    = lvl.color;
+    }
+
+    document.getElementById("reg-password")?.addEventListener("input", (e) => {
+        updateStrength(e.target.value);
+    });
+
     // ── Login ────────────────────────────────────────────────────────────────
     const errorDiv = document.getElementById("login-error");
 
@@ -104,7 +213,6 @@ document.addEventListener("DOMContentLoaded", () => {
             card.classList.add("role-card--active");
             selectedRole = card.dataset.role;
 
-            // Mostrar/ocultar campo do responsável conforme tipo escolhido
             if (selectedRole === "user") {
                 guardianEmailField.style.display = "block";
                 guardianEmailInput.required      = true;
@@ -121,8 +229,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const regSuccess = document.getElementById("register-success");
 
     function showRegError(msg) {
-        regError.textContent   = msg;
-        regError.style.display = "block";
+        regError.textContent     = msg;
+        regError.style.display   = "block";
         regSuccess.style.display = "none";
     }
 
@@ -132,16 +240,19 @@ document.addEventListener("DOMContentLoaded", () => {
         regError.style.display   = "none";
         regSuccess.style.display = "none";
 
-        const name             = document.getElementById("reg-name").value.trim();
-        const email            = document.getElementById("reg-email").value.trim();
-        const guardianEmail    = guardianEmailInput.value.trim();
-        const password         = document.getElementById("reg-password").value;
-        const passwordConfirm  = document.getElementById("reg-password-confirm").value;
-        const termsAccepted    = document.getElementById("reg-terms").checked;
-        const submitBtn        = document.getElementById("register-submit-btn");
+        const name            = document.getElementById("reg-name").value.trim();
+        const email           = document.getElementById("reg-email").value.trim();
+        const guardianEmail   = guardianEmailInput.value.trim();
+        const password        = document.getElementById("reg-password").value;
+        const passwordConfirm = document.getElementById("reg-password-confirm").value;
+        const termsAccepted   = document.getElementById("reg-terms").checked;
+        const submitBtn       = document.getElementById("register-submit-btn");
 
         if (!termsAccepted) {
             return showRegError("Você precisa aceitar os Termos de Uso e a Política de Privacidade.");
+        }
+        if (password.length < 8) {
+            return showRegError("A senha deve ter pelo menos 8 caracteres.");
         }
         if (password !== passwordConfirm) {
             return showRegError("As senhas não coincidem.");
@@ -162,9 +273,10 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await res.json();
 
             if (res.ok) {
-                regSuccess.textContent   = "Conta criada! Agora entre com seus dados.";
+                regSuccess.textContent   = "Conta criada com sucesso! Redirecionando para o login...";
                 regSuccess.style.display = "block";
                 registerForm.reset();
+                updateStrength("");
                 selectedRole = "user";
                 roleCards.forEach(c => c.classList.remove("role-card--active"));
                 document.querySelector('[data-role="user"]').classList.add("role-card--active");

@@ -15,7 +15,7 @@ const register = async (req, res) => {
 
     if (!name) return res.status(400).json({ message: 'Nome é obrigatório.' });
     if (!EMAIL_RE.test(email)) return res.status(400).json({ message: 'E-mail inválido.' });
-    if (password.length < 6) return res.status(400).json({ message: 'A senha deve ter pelo menos 6 caracteres.' });
+    if (password.length < 8) return res.status(400).json({ message: 'A senha deve ter pelo menos 8 caracteres.' });
 
     // Aluno deve informar e-mail do responsável
     if (role === 'user' && !EMAIL_RE.test(guardianEmail)) {
@@ -118,8 +118,8 @@ const resetPassword = async (req, res) => {
       return res.status(400).json({ message: 'Dados incompletos.' });
     }
 
-    if (newPassword.length < 6) {
-      return res.status(400).json({ message: 'A senha deve ter pelo menos 6 caracteres.' });
+    if (newPassword.length < 8) {
+      return res.status(400).json({ message: 'A senha deve ter pelo menos 8 caracteres.' });
     }
 
     const user = await User.findOne({ email: email.trim().toLowerCase() })
