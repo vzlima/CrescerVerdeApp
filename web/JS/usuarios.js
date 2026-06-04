@@ -87,10 +87,12 @@ function filterUsersByRole() {
 }
 
 function updateStats(users) {
-  document.getElementById("stat-total").textContent    = users.length;
-  document.getElementById("stat-alunos").textContent   = users.filter(u => u.role === "user").length;
+  const t = document.getElementById("stat-total");
+  if (!t) return; // elementos removidos do DOM
+  t.textContent = users.length;
+  document.getElementById("stat-alunos").textContent    = users.filter(u => u.role === "user").length;
   document.getElementById("stat-guardians").textContent = users.filter(u => u.role === "guardian").length;
-  document.getElementById("stat-admins").textContent   = users.filter(u => u.role === "admin").length;
+  document.getElementById("stat-admins").textContent    = users.filter(u => u.role === "admin").length;
 }
 
 function findGuardianOfMinor(minorId) {
