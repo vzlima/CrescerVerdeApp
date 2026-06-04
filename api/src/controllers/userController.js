@@ -26,8 +26,11 @@ module.exports = {
 
   async list(req, res) {
     try {
-      const users = await User.find();
-      return res.send({ users });
+      const skip  = parseInt(req.query.skip)  || 0;
+      const limit = parseInt(req.query.limit) || 200;
+      const users = await User.find().skip(skip).limit(limit).lean();
+      const total = await User.countDocuments();
+      return res.send({ users, total, skip, limit });
     } catch (err) {
       return res.status(400).send({ error: 'Erro ao listar usuários' });
     }

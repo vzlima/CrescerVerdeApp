@@ -62,44 +62,55 @@
       </ul>
     </nav>
 
-    <main class="container py-5">
-      <div class="d-flex justify-content-between align-items-center mb-4 text-white">
-        <h2 class="mb-0">Usuários</h2>
-        <div class="d-flex gap-3">
-          <select id="role-filter" class="form-select form-select-sm shadow-sm role-filter-select" onchange="filterUsersByRole()">
+    <main class="container py-4">
+
+      <!-- Header -->
+      <div class="usuarios-header">
+        <div>
+          <h2 class="usuarios-title"><i class="fas fa-users"></i> Usuários</h2>
+          <p class="usuarios-subtitle">Gerencie alunos, responsáveis e administradores da plataforma</p>
+        </div>
+        <div class="usuarios-controls">
+          <select id="role-filter" class="form-select form-select-sm role-filter-select" onchange="filterUsersByRole()">
             <option value="all">Todos</option>
             <option value="admin">Administrador</option>
-            <option value="user">Aluno / Usuário</option>
+            <option value="user">Aluno</option>
             <option value="guardian">Responsável</option>
           </select>
-          <button class="btn btn-light shadow-sm fw-bold text-success" data-bs-toggle="modal" data-bs-target="#userModal" onclick="resetUserModal()">
-            <i class="bi bi-person-plus-fill me-2"></i>Novo
+          <button class="btn-new-user" data-bs-toggle="modal" data-bs-target="#userModal" onclick="resetUserModal()">
+            <i class="fas fa-user-plus"></i> Novo usuário
           </button>
         </div>
       </div>
 
-      <div id="error-message" class="alert alert-danger" style="display:none" role="alert"></div>
-      <div id="success-message" class="alert alert-success" style="display:none" role="alert"></div>
+      <!-- Stats -->
+      <div class="users-stats" id="users-stats">
+        <span class="stat-chip"><i class="fas fa-users"></i> <span id="stat-total">—</span> total</span>
+        <span class="stat-chip"><i class="fas fa-graduation-cap"></i> <span id="stat-alunos">—</span> alunos</span>
+        <span class="stat-chip"><i class="fas fa-shield-alt"></i> <span id="stat-guardians">—</span> responsáveis</span>
+        <span class="stat-chip"><i class="fas fa-user-shield"></i> <span id="stat-admins">—</span> admins</span>
+      </div>
 
-      <div class="card shadow rounded-4 border-0">
-        <div class="card-body p-0">
-          <div class="table-responsive rounded-4">
-            <table class="table table-hover align-middle mb-0">
-              <thead class="table-light text-muted">
-                <tr>
-                  <th class="ps-4">Nome</th>
-                  <th>Email</th>
-                  <th>Tipo</th>
-                  <th>Plano</th>
-                  <th>Vínculos</th>
-                  <th class="text-end pe-4">Ações</th>
-                </tr>
-              </thead>
-              <tbody id="users-table-body">
-                <tr><td colspan="6" class="text-center py-4">Carregando usuários...</td></tr>
-              </tbody>
-            </table>
-          </div>
+      <div id="error-message" class="alert alert-danger mb-3" style="display:none" role="alert"></div>
+      <div id="success-message" class="alert alert-success mb-3" style="display:none" role="alert"></div>
+
+      <div class="users-table-card">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead>
+              <tr>
+                <th class="ps-4">Usuário</th>
+                <th>E-mail</th>
+                <th>Tipo</th>
+                <th>Plano</th>
+                <th>Vínculos</th>
+                <th class="text-end pe-4">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="users-table-body">
+              <tr><td colspan="6" class="text-center py-4 text-muted">Carregando usuários...</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </main>

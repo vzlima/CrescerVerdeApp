@@ -81,7 +81,16 @@ async function loadUsers() {
 /* ── Filter + Render ── */
 function filterUsersByRole() {
   const val = document.getElementById("role-filter").value;
-  renderUsers(val === "all" ? globalUsersData : globalUsersData.filter(u => u.role === val));
+  const filtered = val === "all" ? globalUsersData : globalUsersData.filter(u => u.role === val);
+  updateStats(globalUsersData);
+  renderUsers(filtered);
+}
+
+function updateStats(users) {
+  document.getElementById("stat-total").textContent    = users.length;
+  document.getElementById("stat-alunos").textContent   = users.filter(u => u.role === "user").length;
+  document.getElementById("stat-guardians").textContent = users.filter(u => u.role === "guardian").length;
+  document.getElementById("stat-admins").textContent   = users.filter(u => u.role === "admin").length;
 }
 
 function findGuardianOfMinor(minorId) {
@@ -91,50 +100,93 @@ function findGuardianOfMinor(minorId) {
   ) || null;
 }
 
+function getInitials(name) {
+  return (name || "?").split(" ").slice(0, 2).map(w => w[0]).join("").toUpperCase();
+}
+
 function renderUsers(users) {
   const tbody = document.getElementById("users-table-body");
   tbody.innerHTML = "";
+
   if (!users.length) {
-    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4">Nenhum usuário encontrado.</td></tr>';
+    tbody.innerHTML = `<tr><td colspan="6">
+      <div class="empty-state">
+        <i class="fas fa-users-slash"></i>
+        Nenhum usuário encontrado.
+      </div>
+    </td></tr>`;
     return;
   }
 
-  const roleBadge = {
-    admin:    '<span class="badge bg-light-success border border-success border-opacity-25 rounded-pill"><i class="bi bi-shield-lock-fill me-1"></i>Admin</span>',
-    guardian: '<span class="badge bg-light-warning border border-warning border-opacity-25 rounded-pill"><i class="bi bi-person-heart me-1"></i>Responsável</span>',
-    user:     '<span class="badge bg-light-secondary border border-secondary border-opacity-25 rounded-pill"><i class="bi bi-person-fill me-1"></i>Aluno</span>',
-  };
+  const roleIcon  = { admin: 'fa-user-shield', guardian: 'fa-shield-alt', user: 'fa-graduation-cap' };
+  const roleLabel = { admin: 'Admin', guardian: 'Responsável', user: 'Aluno' };
+  const planIcon  = { free: 'fa-seedling', familia: 'fa-people-roof', escola: 'fa-school' };
 
   users.forEach(u => {
-    const displayName = u.name || '(sem nome)';
-    const safeName = displayName.replace(/'/g, "\\'");
-    const role = roleBadge[u.role] || roleBadge.user;
-    const plan = u.plan || 'free';
-    const planLabel = `<span class="plan-dot ${plan}"></span>${PLAN_LABEL[plan] || plan}`;
+    const name     = u.name || '(sem nome)';
+    const safeName = name.replace(/'/g, "\\'");
+    const role     = u.role || 'user';
+    const plan     = u.plan || 'free';
 
-    let vínculo = '<span class="text-muted small">—</span>';
-    if (u.role === "guardian") {
-      const linked = globalUsersData.filter(x => x.isMinor && Array.isArray(u.guardianOf) && u.guardianOf.map(String).includes(String(x._id)));
-      vínculo = linked.length
-        ? `<span class="badge bg-light-primary border border-primary border-opacity-25 rounded-pill small"><i class="bi bi-people me-1"></i>${linked.length} aluno${linked.length > 1 ? 's' : ''}</span>`
-        : '<span class="text-muted small">Sem alunos</span>';
+    // Avatar
+    const avatar = `<div class="user-avatar role-${role}">${getInitials(name)}</div>`;
+
+    // Name + minor tag
+    const minorTag = u.isMinor
+      ? '<span class="user-minor-tag">menor</span>'
+      : '';
+    const nameCell = `
+      <div class="user-cell">
+        ${avatar}
+        <div>
+          <div class="user-name">${name}${minorTag}</div>
+        </div>
+      </div>`;
+
+    // Role badge
+    const roleBadge = `<span class="role-badge ${role}">
+      <i class="fas ${roleIcon[role] || 'fa-user'}" style="font-size:.7rem"></i>
+      ${roleLabel[role] || role}
+    </span>`;
+
+    // Plan chip
+    const planChip = `<span class="plan-chip ${plan}">
+      <span class="plan-dot ${plan}"></span>
+      ${PLAN_LABEL[plan] || plan}
+    </span>`;
+
+    // Vínculo
+    let linkCell = '<span class="link-chip no-link"><i class="fas fa-minus" style="font-size:.65rem"></i> —</span>';
+    if (role === "guardian") {
+      const linked = globalUsersData.filter(x =>
+        x.isMinor && Array.isArray(u.guardianOf) && u.guardianOf.map(String).includes(String(x._id))
+      );
+      linkCell = linked.length
+        ? `<span class="link-chip student-count"><i class="fas fa-graduation-cap" style="font-size:.65rem"></i> ${linked.length} aluno${linked.length > 1 ? 's' : ''}</span>`
+        : '<span class="link-chip no-link"><i class="fas fa-user-slash" style="font-size:.65rem"></i> Sem alunos</span>';
     } else if (u.isMinor) {
       const guardian = findGuardianOfMinor(u._id);
-      vínculo = guardian
-        ? `<span class="badge bg-light-warning border border-warning border-opacity-25 rounded-pill small"><i class="bi bi-person-heart me-1"></i>${guardian.name}</span>`
-        : `<span class="badge bg-light-secondary border border-secondary border-opacity-25 rounded-pill small text-muted"><i class="bi bi-person-x me-1"></i>Sem responsável</span>`;
+      linkCell = guardian
+        ? `<span class="link-chip guardian-link"><i class="fas fa-shield-alt" style="font-size:.65rem"></i> ${guardian.name.split(' ')[0]}</span>`
+        : '<span class="link-chip no-link"><i class="fas fa-user-slash" style="font-size:.65rem"></i> Sem responsável</span>';
     }
 
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td class="ps-4 fw-medium text-dark">${displayName}${u.isMinor ? ' <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 rounded-pill" style="font-size:.7rem">menor</span>' : ''}</td>
-      <td class="text-muted small">${u.email || ''}</td>
-      <td>${role}</td>
-      <td class="small">${planLabel}</td>
-      <td>${vínculo}</td>
+      <td class="ps-4">${nameCell}</td>
+      <td><span class="user-email">${u.email || ''}</span></td>
+      <td>${roleBadge}</td>
+      <td>${planChip}</td>
+      <td>${linkCell}</td>
       <td class="text-end pe-4">
-        <button class="btn btn-sm btn-light text-primary border action-btn me-1" onclick="openEditModal('${u._id}')" title="Editar"><i class="bi bi-pencil-fill"></i></button>
-        <button class="btn btn-sm btn-light text-danger border action-btn" onclick="openDeleteModal('${u._id}', '${safeName}')" title="Excluir"><i class="bi bi-trash3-fill"></i></button>
+        <button class="btn btn-sm btn-light text-primary border action-btn me-1"
+          onclick="openEditModal('${u._id}')" title="Editar">
+          <i class="bi bi-pencil-fill"></i>
+        </button>
+        <button class="btn btn-sm btn-light text-danger border action-btn"
+          onclick="openDeleteModal('${u._id}', '${safeName}')" title="Excluir">
+          <i class="bi bi-trash3-fill"></i>
+        </button>
       </td>`;
     tbody.appendChild(row);
   });
