@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const rateLimit = require('express-rate-limit');
 const loggerMiddleware = require('./middlewares/loggerMiddleware');
-const { authRoutes, courseRoutes, userRoutes, courseContentRoutes, courseProgressRoutes, certificateRoutes } = require('./routes/export');
+const { authRoutes, courseRoutes, userRoutes, courseContentRoutes, courseProgressRoutes, certificateRoutes, auditLogRoutes } = require('./routes/export');
 
 const app = express();
 const isProd = process.env.NODE_ENV === 'production';
@@ -68,6 +68,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/courseContents', courseContentRoutes);
 app.use('/api/courseProgress', courseProgressRoutes);
 app.use('/api/certificates', certificateRoutes);
+app.use('/api/audit', auditLogRoutes);
 
 if (require.main === module) {
   const port = process.env.PORT || 3000;

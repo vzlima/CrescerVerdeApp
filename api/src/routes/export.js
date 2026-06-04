@@ -4,6 +4,7 @@ const userRoutes = require('./userRoutes');
 const courseContentRoutes = require('./courseContentRoute');
 const courseProgressRoutes = require('./courseProgressRoute');
 const certificateRoutes = require('./certificateRoute');
+const auditLogRoutes = require('./auditLogRoute');
 
 module.exports = {
   authRoutes,
@@ -11,5 +12,6 @@ module.exports = {
   userRoutes,
   courseContentRoutes,
   courseProgressRoutes,
-  certificateRoutes
+  certificateRoutes,
+  auditLogRoutes,
 };

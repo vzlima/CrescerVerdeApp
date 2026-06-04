@@ -405,23 +405,24 @@ async function handleContentSubmit(e) {
 
 window.deleteContent = async function () {
   const id = document.getElementById("contentId").value;
-  if (!id || !confirm("Tem certeza que deseja excluir este conteúdo?")) return;
+  if (!id) return;
 
-  const token = localStorage.getItem("token");
-  try {
-    const res = await fetch(`${API_BASE}/api/courseContents/delete/${id}`, {
-      method: "POST",
-      headers: { "Authorization": `Bearer ${token}` }
-    });
-
-    if (res.ok) {
-      const modalElement = document.getElementById('contentModal');
-      bootstrap.Modal.getInstance(modalElement).hide();
-      loadContentsAndProgress();
-    } else {
-      showToast("Erro ao excluir conteúdo.");
+  cvConfirm("Excluir este conteúdo permanentemente?", async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await fetch(`${API_BASE}/api/courseContents/delete/${id}`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const modalElement = document.getElementById('contentModal');
+        bootstrap.Modal.getInstance(modalElement).hide();
+        loadContentsAndProgress();
+      } else {
+        showToast("Erro ao excluir conteúdo.");
+      }
+    } catch (err) {
+      console.error(err);
     }
-  } catch (err) {
-    console.error(err);
-  }
+  }, { confirmTxt: "Excluir", icon: "fa-trash" });
 };

@@ -149,9 +149,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("user", JSON.stringify(data.user));
 
-                window.location.href = data.user.role === "guardian"
-                    ? "/HTML/painel-parental.html"
-                    : "/HTML/jogos.html";
+                if (data.user.role === "guardian") {
+                    window.location.href = "/HTML/painel-parental.html";
+                } else if (data.user.role === "admin") {
+                    window.location.href = "/HTML/jogos.html";
+                } else {
+                    // Mostra onboarding apenas na 1ª sessão de alunos
+                    const onboarded = localStorage.getItem("cv_onboarded");
+                    window.location.href = onboarded ? "/HTML/jogos.html" : "/HTML/onboarding.html";
+                }
             } else {
                 errorDiv.textContent   = data.message || "Erro ao fazer login. Verifique suas credenciais.";
                 errorDiv.style.display = "block";

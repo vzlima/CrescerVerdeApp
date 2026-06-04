@@ -1,4 +1,5 @@
 const CourseProgress = require('../models/CourseProgress');
+const { logEvent } = require('./auditLogController');
 
 const resolveUserId = (req) =>
   req.user.role === 'admin' ? (req.body.userId || req.user.id) : req.user.id;
@@ -43,6 +44,9 @@ module.exports = {
         { isCourseCompleted },
         { new: true, upsert: true }
       );
+      if (isCourseCompleted) {
+        logEvent(userId, 'course_complete', { courseId });
+      }
       return res.send({ courseProgress });
     } catch (err) {
       return res.status(400).send({ error: 'Erro ao atualizar progresso do curso' });
@@ -57,6 +61,17 @@ module.exports = {
       return res.send({ courseProgress });
     } catch (err) {
       return res.status(400).send({ error: 'Erro ao buscar progresso do curso' });
+    }
+  },
+
+  // Registra abertura de trilha — fire-and-forget pelo frontend
+  async open(req, res) {
+    try {
+      const { courseId } = req.body;
+      if (courseId) logEvent(req.user.id, 'course_open', { courseId });
+      return res.send({ ok: true });
+    } catch (err) {
+      return res.send({ ok: false });
     }
   },
 };

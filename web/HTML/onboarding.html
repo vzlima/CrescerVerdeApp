@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/Imagens/EarthPNG.png" sizes="16x16" type="image/png" />
+    <title>Bem-vindo | CrescerVerde</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/CSS/design-system.css" />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(150deg, #1b5e20 0%, #2e7d32 50%, #43a047 100%);
+        font-family: var(--font-body);
+        padding: 24px 16px;
+      }
+
+      .ob-card {
+        background: #fff;
+        border-radius: 24px;
+        box-shadow: 0 24px 64px rgba(0,0,0,0.22);
+        width: 100%;
+        max-width: 480px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      /* ── Progress bar ── */
+      .ob-progress {
+        height: 4px;
+        background: #e8f5e9;
+      }
+      .ob-progress-fill {
+        height: 100%;
+        background: var(--cv-primary, #27ae60);
+        transition: width 0.4s ease;
+      }
+
+      /* ── Steps ── */
+      .ob-step {
+        display: none;
+        padding: 40px 36px 32px;
+        text-align: center;
+        animation: ob-in 0.3s ease;
+      }
+      .ob-step.active { display: block; }
+
+      @keyframes ob-in {
+        from { opacity: 0; transform: translateX(20px); }
+        to   { opacity: 1; transform: translateX(0); }
+      }
+
+      .ob-icon {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: #e8f5e9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 2rem;
+        color: #1b5e20;
+      }
+
+      .ob-step h2 {
+        font-family: var(--font-display);
+        font-size: 1.55rem;
+        font-weight: 900;
+        color: #1a2e1a;
+        margin: 0 0 12px;
+      }
+
+      .ob-step p {
+        font-size: 0.95rem;
+        color: #555;
+        line-height: 1.65;
+        margin: 0 0 24px;
+      }
+
+      /* ── Step 2: how it works ── */
+      .ob-steps-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        text-align: left;
+        margin-bottom: 28px;
+      }
+
+      .ob-step-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        background: #f8fffe;
+        border-radius: 12px;
+        padding: 14px 16px;
+        border: 1px solid #e8f5e9;
+      }
+
+      .ob-step-num {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #1b5e20;
+        color: #fff;
+        font-weight: 800;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-family: var(--font-display);
+      }
+
+      .ob-step-item-text strong {
+        display: block;
+        font-size: 0.9rem;
+        color: #1a2e1a;
+        margin-bottom: 2px;
+      }
+
+      .ob-step-item-text span {
+        font-size: 0.82rem;
+        color: #777;
+      }
+
+      /* ── Step 3: difficulty cards ── */
+      .ob-diff-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 24px;
+      }
+
+      .ob-diff-card {
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 14px 8px;
+        cursor: pointer;
+        transition: all 0.15s;
+        background: #fff;
+        text-align: center;
+      }
+
+      .ob-diff-card:hover { border-color: #27ae60; background: #f0faf2; }
+
+      .ob-diff-card.selected {
+        border-color: #1b5e20;
+        background: #e8f5e9;
+        box-shadow: 0 0 0 3px rgba(39,174,96,0.2);
+      }
+
+      .ob-diff-card i { font-size: 1.4rem; display: block; margin-bottom: 6px; }
+      .ob-diff-card span { font-size: 0.78rem; font-weight: 700; color: #333; }
+
+      .ob-diff-card.iniciante i    { color: #2e7d32; }
+      .ob-diff-card.intermediario i { color: #1565c0; }
+      .ob-diff-card.avancado i     { color: #b71c1c; }
+
+      /* ── Footer: dots + buttons ── */
+      .ob-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 36px 32px;
+        gap: 12px;
+      }
+
+      .ob-dots {
+        display: flex;
+        gap: 6px;
+      }
+
+      .ob-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #e0e0e0;
+        transition: background 0.2s, width 0.2s;
+      }
+
+      .ob-dot.active {
+        background: #27ae60;
+        width: 20px;
+        border-radius: 4px;
+      }
+
+      .ob-btn-next {
+        background: linear-gradient(135deg, #1b5e20, #27ae60);
+        color: #fff;
+        border: none;
+        border-radius: 24px;
+        padding: 12px 28px;
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: 0.95rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: filter 0.15s;
+        letter-spacing: 0.3px;
+      }
+
+      .ob-btn-next:hover { filter: brightness(1.08); }
+
+      .ob-skip {
+        background: none;
+        border: none;
+        color: #aaa;
+        font-size: 0.82rem;
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 6px;
+        transition: color 0.15s;
+      }
+
+      .ob-skip:hover { color: #555; }
+
+      @media (max-width: 480px) {
+        .ob-step { padding: 28px 20px 24px; }
+        .ob-footer { padding: 0 20px 24px; }
+        .ob-diff-grid { gap: 8px; }
+        .ob-diff-card { padding: 10px 4px; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="ob-card">
+      <div class="ob-progress">
+        <div class="ob-progress-fill" id="ob-progress-fill" style="width:33%"></div>
+      </div>
+
+      <!-- Step 1: O que é o CrescerVerde -->
+      <div class="ob-step active" id="ob-step-1">
+        <div class="ob-icon"><i class="fas fa-leaf"></i></div>
+        <h2>Bem-vindo ao CrescerVerde!</h2>
+        <p>
+          Uma plataforma de educação ambiental gamificada para crianças e adolescentes.
+          Aprenda sobre sustentabilidade jogando, ganhe certificados e faça a diferença
+          pelo planeta.
+        </p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:8px;">
+          <div style="background:#e8f5e9;border-radius:10px;padding:10px 16px;font-size:0.82rem;color:#1b5e20;font-weight:600;">
+            <i class="fas fa-gamepad me-1"></i> Trilhas interativas
+          </div>
+          <div style="background:#e3f2fd;border-radius:10px;padding:10px 16px;font-size:0.82rem;color:#1565c0;font-weight:600;">
+            <i class="fas fa-certificate me-1"></i> Certificados
+          </div>
+          <div style="background:#f3e5f5;border-radius:10px;padding:10px 16px;font-size:0.82rem;color:#6a1b9a;font-weight:600;">
+            <i class="fas fa-globe me-1"></i> ODS 2030
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Como funciona -->
+      <div class="ob-step" id="ob-step-2">
+        <div class="ob-icon"><i class="fas fa-route"></i></div>
+        <h2>Como funciona?</h2>
+        <p>Em poucos passos você já estará aprendendo e se divertindo:</p>
+        <div class="ob-steps-list">
+          <div class="ob-step-item">
+            <div class="ob-step-num">1</div>
+            <div class="ob-step-item-text">
+              <strong>Escolha uma trilha</strong>
+              <span>Coleta seletiva, energia limpa, cidades sustentáveis e muito mais.</span>
+            </div>
+          </div>
+          <div class="ob-step-item">
+            <div class="ob-step-num">2</div>
+            <div class="ob-step-item-text">
+              <strong>Jogue e aprenda</strong>
+              <span>Cada trilha tem jogos interativos e vídeos com feedback imediato.</span>
+            </div>
+          </div>
+          <div class="ob-step-item">
+            <div class="ob-step-num">3</div>
+            <div class="ob-step-item-text">
+              <strong>Ganhe seu certificado</strong>
+              <span>Ao completar uma trilha, você recebe um certificado digital para imprimir.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Escolha dificuldade -->
+      <div class="ob-step" id="ob-step-3">
+        <div class="ob-icon"><i class="fas fa-filter"></i></div>
+        <h2>Por onde quer começar?</h2>
+        <p>Escolha o nível que mais combina com você:</p>
+        <div class="ob-diff-grid">
+          <div class="ob-diff-card iniciante selected" data-diff="iniciante">
+            <i class="fas fa-seedling"></i>
+            <span>Iniciante</span>
+          </div>
+          <div class="ob-diff-card intermediario" data-diff="intermediario">
+            <i class="fas fa-tree"></i>
+            <span>Intermediário</span>
+          </div>
+          <div class="ob-diff-card avancado" data-diff="avancado">
+            <i class="fas fa-mountain"></i>
+            <span>Avançado</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ob-footer">
+        <button class="ob-skip" id="ob-skip">Pular</button>
+        <div class="ob-dots">
+          <div class="ob-dot active" id="dot-0"></div>
+          <div class="ob-dot"        id="dot-1"></div>
+          <div class="ob-dot"        id="dot-2"></div>
+        </div>
+        <button class="ob-btn-next" id="ob-btn-next">
+          Próximo <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <script src="/JS/config.js"></script>
+    <script src="/JS/onboarding.js"></script>
+  </body>
+</html>

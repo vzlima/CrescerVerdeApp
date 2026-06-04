@@ -1,5 +1,6 @@
 const Certificate = require('../models/Certificate');
 const CourseProgress = require('../models/CourseProgress');
+const { logEvent } = require('./auditLogController');
 
 const create = async (req, res) => {
   try {
@@ -21,6 +22,9 @@ const create = async (req, res) => {
 
     const certificate = new Certificate({ user: userId, course: courseId });
     await certificate.save();
+
+    logEvent(userId, 'certificate_issued', { courseId, certificateId: certificate._id });
+
     res.status(201).json(certificate);
   } catch (err) {
     res.status(500).json({ message: err.message });

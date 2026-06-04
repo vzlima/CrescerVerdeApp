@@ -58,11 +58,16 @@ const userSchema = new mongoose.Schema({
     type: Date,
     select: false,
   },
+  passwordChangedAt: {
+    type: Date,
+    select: false,
+  },
 });
 
 userSchema.pre('save', async function () {
   if (!this.isModified('password')) return;
   this.password = await bcrypt.hash(this.password, 12);
+  if (!this.isNew) this.passwordChangedAt = new Date();
 });
 
 const User = mongoose.model('User', userSchema);

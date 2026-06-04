@@ -85,32 +85,28 @@ window.deleteCourse = async function () {
   const courseId = document.getElementById("courseId").value;
   if (!courseId) return;
 
-  if (!confirm("Tem certeza que deseja excluir permanentemente este curso?")) return;
-
-  const token = localStorage.getItem("token");
-  if (!token) return showToast("Usuário não autenticado.", "warning");
-
-  try {
-    const response = await fetch(`${API_BASE}/api/courses/${courseId}`, {
-      method: "DELETE",
-      headers: {
-        "Authorization": `Bearer ${token}`
+  cvConfirm("Excluir permanentemente este curso?", async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return showToast("Usuário não autenticado.", "warning");
+    try {
+      const response = await fetch(`${API_BASE}/api/courses/${courseId}`, {
+        method: "DELETE",
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      if (response.ok) {
+        const modalElement = document.getElementById('courseModal');
+        const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+        modalInstance.hide();
+        loadCourses();
+      } else {
+        const data = await response.json();
+        showToast(data.error || "Erro ao deletar curso");
       }
-    });
-
-    if (response.ok) {
-      const modalElement = document.getElementById('courseModal');
-      const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
-      modalInstance.hide();
-      loadCourses();
-    } else {
-      const data = await response.json();
-      showToast(data.error || "Erro ao deletar curso");
+    } catch (error) {
+      console.error("Error deleting course", error);
+      showToast("Erro de conexão com o servidor ao excluir.");
     }
-  } catch (error) {
-    console.error("Error deleting course", error);
-    showToast("Erro de conexão com o servidor ao excluir.");
-  }
+  }, { confirmTxt: "Excluir", icon: "fa-trash" });
 };
 
 document.addEventListener("DOMContentLoaded", () => {

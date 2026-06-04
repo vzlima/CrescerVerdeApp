@@ -179,24 +179,25 @@ window.openEditModal = openEditModal;
 
 window.deleteCourse = async function () {
   const id = document.getElementById("courseId").value;
-  if (!id || !confirm("Excluir esta trilha permanentemente?")) return;
+  if (!id) return;
 
-  const token = localStorage.getItem("token");
-  if (!token) return showToast("Não autenticado.", "warning");
-
-  try {
-    const res = await fetch(`${API_BASE}/api/courses/${id}`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    if (res.ok) {
-      bootstrap.Modal.getInstance(document.getElementById("courseModal"))?.hide();
-      loadCourses();
-    } else {
-      const d = await res.json();
-      showToast(d.error || "Erro ao deletar trilha.");
-    }
-  } catch { showToast("Erro de conexão."); }
+  cvConfirm("Excluir esta trilha permanentemente? Esta ação não pode ser desfeita.", async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return showToast("Não autenticado.", "warning");
+    try {
+      const res = await fetch(`${API_BASE}/api/courses/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        bootstrap.Modal.getInstance(document.getElementById("courseModal"))?.hide();
+        loadCourses();
+      } else {
+        const d = await res.json();
+        showToast(d.error || "Erro ao deletar trilha.");
+      }
+    } catch { showToast("Erro de conexão."); }
+  }, { confirmTxt: "Excluir", icon: "fa-trash" });
 };
 
 /* ── DOMContentLoaded ── */
@@ -208,6 +209,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   setupFilters();
   loadCourses();
+
+  // Aplica preferência de dificuldade definida no onboarding
+  const preferred = localStorage.getItem("cv_preferred_trail");
+  if (preferred) {
+    const btn = document.querySelector(`.filter-btn[data-filter="${preferred}"]`);
+    if (btn) btn.click();
+    localStorage.removeItem("cv_preferred_trail");
+  }
 
   document.getElementById("deleteCourseBtn")?.addEventListener("click", window.deleteCourse);
 

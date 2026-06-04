@@ -62,6 +62,15 @@ async function loadCourseDetails() {
         document.getElementById("course-desc").textContent = course.description;
       }
     }
+    // Registra abertura da trilha (fire-and-forget, apenas alunos)
+    if (!isAdmin && currentUser) {
+      const token = localStorage.getItem("token");
+      fetch(API_BASE + "/api/courseProgress/open", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ courseId: currentCourseId }),
+      }).catch(() => {});
+    }
   } catch (err) {
     // course title stays as fallback
   }
@@ -396,23 +405,24 @@ async function handleContentSubmit(e) {
 
 window.deleteContent = async function () {
   const id = document.getElementById("contentId").value;
-  if (!id || !confirm("Tem certeza que deseja excluir este conteúdo?")) return;
+  if (!id) return;
 
-  const token = localStorage.getItem("token");
-  try {
-    const res = await fetch(`${API_BASE}/api/courseContents/delete/${id}`, {
-      method: "POST",
-      headers: { "Authorization": `Bearer ${token}` }
-    });
-
-    if (res.ok) {
-      const modalElement = document.getElementById('contentModal');
-      bootstrap.Modal.getInstance(modalElement).hide();
-      loadContentsAndProgress();
-    } else {
+  cvConfirm("Excluir este conteúdo permanentemente?", async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await fetch(`${API_BASE}/api/courseContents/delete/${id}`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const modalElement = document.getElementById('contentModal');
+        bootstrap.Modal.getInstance(modalElement).hide();
+        loadContentsAndProgress();
+      } else {
+        showToast("Erro ao excluir conteúdo.");
+      }
+    } catch (err) {
       showToast("Erro ao excluir conteúdo.");
     }
-  } catch (err) {
-    showToast("Erro ao excluir conteúdo.");
-  }
+  }, { confirmTxt: "Excluir", icon: "fa-trash" });
 };

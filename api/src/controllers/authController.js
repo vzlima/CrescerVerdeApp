@@ -2,6 +2,7 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
+const { logEvent } = require('./auditLogController');
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -64,6 +65,8 @@ const login = async (req, res) => {
     }
 
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '4h' });
+
+    logEvent(user._id, 'login', { ip: req.ip });
 
     res.json({
       token,
@@ -144,4 +147,17 @@ const resetPassword = async (req, res) => {
   }
 };
 
-module.exports = { register, login, forgotPassword, resetPassword };
+module.exports = { register, login, forgotPassword, resetPassword, logout };
+
+const logout = async (req, res) => {
+  try {
+    const sessionDuration = parseInt(req.body?.sessionDuration) || null;
+    // req.user é injetado pelo authMiddleware
+    if (req.user?.id) {
+      logEvent(req.user.id, 'logout', {}, sessionDuration);
+    }
+    res.json({ message: 'Logout registrado.' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

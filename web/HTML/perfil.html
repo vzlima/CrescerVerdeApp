@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/Imagens/EarthPNG.png" sizes="16x16" type="image/png" />
+    <title>Meu Perfil | CrescerVerde</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/CSS/design-system.css" />
+    <link rel="stylesheet" href="/CSS/styles.css" />
+    <style>
+      .profile-header {
+        background: linear-gradient(150deg, #1b5e20, #2e7d32);
+        color: #fff;
+        padding: 32px 24px 28px;
+        text-align: center;
+      }
+      .profile-avatar {
+        width: 80px; height: 80px; border-radius: 50%;
+        background: rgba(255,255,255,0.15);
+        border: 3px solid rgba(255,255,255,0.4);
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 14px;
+        font-size: 2rem; font-weight: 900; font-family: var(--font-display);
+        color: #fff;
+      }
+      .profile-name {
+        font-family: var(--font-display);
+        font-size: 1.4rem; font-weight: 900; margin: 0 0 4px;
+      }
+      .profile-role-chip {
+        display: inline-block; padding: 3px 12px;
+        border-radius: 12px; font-size: 0.78rem; font-weight: 700;
+        background: rgba(255,255,255,0.2); color: #fff;
+      }
+
+      .profile-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        padding: 24px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(39,174,96,0.1);
+      }
+      .profile-card h3 {
+        font-family: var(--font-display);
+        font-size: 1rem; font-weight: 800; color: #1b5e20;
+        margin: 0 0 18px;
+        display: flex; align-items: center; gap: 8px;
+      }
+
+      .form-label { font-weight: 600; font-size: 0.88rem; color: #555; }
+      .form-control:focus { border-color: #27ae60; box-shadow: 0 0 0 3px rgba(39,174,96,0.18); }
+      .btn-save {
+        background: linear-gradient(135deg, #1b5e20, #27ae60);
+        color: #fff; border: none; border-radius: 24px;
+        padding: 10px 28px; font-weight: 800; font-size: 0.9rem;
+        cursor: pointer; transition: filter 0.15s;
+      }
+      .btn-save:hover { filter: brightness(1.07); }
+      .btn-save:disabled { opacity: 0.6; cursor: not-allowed; filter: none; }
+
+      .cert-mini {
+        display: flex; align-items: center; gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f4f0;
+      }
+      .cert-mini:last-child { border-bottom: none; }
+      .cert-mini-icon {
+        width: 36px; height: 36px; border-radius: 50%;
+        background: #e8f5e9; color: #1b5e20;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.9rem; flex-shrink: 0;
+      }
+      .cert-mini-name { font-size: 0.88rem; font-weight: 600; color: #333; }
+      .cert-mini-date { font-size: 0.75rem; color: #999; }
+
+      .danger-zone {
+        border: 1.5px solid #ffcdd2; border-radius: 16px;
+        padding: 20px 24px; background: #fff9f9; margin-bottom: 20px;
+      }
+      .danger-zone h3 {
+        font-family: var(--font-display); font-size: 1rem; font-weight: 800;
+        color: #b71c1c; margin: 0 0 8px;
+        display: flex; align-items: center; gap: 8px;
+      }
+      .danger-zone p { font-size: 0.85rem; color: #777; margin: 0 0 14px; }
+      .btn-delete-account {
+        background: none; border: 1.5px solid #e53935; color: #e53935;
+        border-radius: 24px; padding: 9px 22px; font-weight: 700;
+        font-size: 0.88rem; cursor: pointer; transition: all 0.15s;
+        display: inline-flex; align-items: center; gap: 7px;
+      }
+      .btn-delete-account:hover { background: #e53935; color: #fff; }
+
+      .password-field { position: relative; }
+      .password-field input { padding-right: 44px !important; }
+      .toggle-pw {
+        position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+        background: none; border: none; cursor: pointer; color: #888; font-size: 0.9rem;
+      }
+      .toggle-pw:hover { color: #27ae60; }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar" id="main-nav">
+      <a href="/index.html" class="navbar-brand">
+        <img src="/Imagens/logo.png" alt="CrescerVerde" />
+      </a>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Abrir menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav" id="nav-links">
+        <li class="nav-item"><a class="nav-link" href="/HTML/jogos.html"><i class="fas fa-gamepad"></i> Jogos</a></li>
+        <li class="nav-item"><a class="nav-link" href="/HTML/certificados.html"><i class="fas fa-certificate"></i> Certificados</a></li>
+        <li class="nav-item"><a class="nav-link" href="/HTML/planos.html"><i class="fas fa-layer-group"></i> Planos</a></li>
+        <li class="nav-item" id="nav-usuarios-li" style="display:none">
+          <a class="nav-link" href="/HTML/usuarios.html" id="nav-usuarios"><i class="fas fa-users"></i> Usuários</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link nav-btn" href="/HTML/login.html" id="nav-login"><i class="fas fa-sign-in-alt"></i> Entrar</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="profile-header">
+      <div class="profile-avatar" id="profile-avatar">?</div>
+      <div class="profile-name"  id="profile-name">Carregando...</div>
+      <span class="profile-role-chip" id="profile-role-chip"></span>
+    </div>
+
+    <main style="width:90%;max-width:600px;margin:28px auto;flex:1;">
+
+      <!-- Editar dados -->
+      <div class="profile-card">
+        <h3><i class="fas fa-user-edit"></i> Informações pessoais</h3>
+        <form id="profile-form">
+          <div class="mb-3">
+            <label for="pf-name" class="form-label">Nome completo</label>
+            <input type="text" class="form-control" id="pf-name" required autocomplete="name" />
+          </div>
+          <div class="mb-3">
+            <label for="pf-email" class="form-label">E-mail</label>
+            <input type="email" class="form-control" id="pf-email" required autocomplete="email" />
+          </div>
+          <div id="profile-form-error"   class="alert alert-danger  py-2 small" style="display:none"></div>
+          <div id="profile-form-success" class="alert alert-success py-2 small" style="display:none"></div>
+          <button type="submit" class="btn-save" id="profile-save-btn">
+            <i class="fas fa-save me-1"></i> Salvar
+          </button>
+        </form>
+      </div>
+
+      <!-- Trocar senha -->
+      <div class="profile-card">
+        <h3><i class="fas fa-lock"></i> Alterar senha</h3>
+        <form id="password-form">
+          <div class="mb-3">
+            <label for="pf-current-pw" class="form-label">Senha atual</label>
+            <div class="password-field">
+              <input type="password" class="form-control" id="pf-current-pw" required autocomplete="current-password" />
+              <button type="button" class="toggle-pw" data-target="pf-current-pw"><i class="fas fa-eye"></i></button>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="pf-new-pw" class="form-label">Nova senha</label>
+            <div class="password-field">
+              <input type="password" class="form-control" id="pf-new-pw" required autocomplete="new-password" placeholder="Mínimo 8 caracteres" />
+              <button type="button" class="toggle-pw" data-target="pf-new-pw"><i class="fas fa-eye"></i></button>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="pf-confirm-pw" class="form-label">Confirmar nova senha</label>
+            <div class="password-field">
+              <input type="password" class="form-control" id="pf-confirm-pw" required autocomplete="new-password" />
+              <button type="button" class="toggle-pw" data-target="pf-confirm-pw"><i class="fas fa-eye"></i></button>
+            </div>
+          </div>
+          <div id="pw-form-error"   class="alert alert-danger  py-2 small" style="display:none"></div>
+          <div id="pw-form-success" class="alert alert-success py-2 small" style="display:none"></div>
+          <button type="submit" class="btn-save" id="pw-save-btn">
+            <i class="fas fa-key me-1"></i> Alterar senha
+          </button>
+        </form>
+      </div>
+
+      <!-- Certificados -->
+      <div class="profile-card">
+        <h3><i class="fas fa-certificate"></i> Meus certificados</h3>
+        <div id="certs-list"><p class="text-muted small">Carregando...</p></div>
+        <a href="/HTML/certificados.html" class="btn btn-outline-success btn-sm rounded-pill mt-2" style="font-weight:700;font-size:0.82rem;">
+          Ver todos <i class="fas fa-arrow-right ms-1"></i>
+        </a>
+      </div>
+
+      <!-- Zona de perigo -->
+      <div class="danger-zone">
+        <h3><i class="fas fa-triangle-exclamation"></i> Excluir minha conta</h3>
+        <p>
+          Esta ação é permanente e irreversível. Todos os seus dados, progresso e certificados
+          serão apagados (direito ao esquecimento — LGPD Art. 18).
+        </p>
+        <button class="btn-delete-account" id="btn-delete-account">
+          <i class="fas fa-trash-alt"></i> Excluir minha conta
+        </button>
+      </div>
+
+    </main>
+
+    <footer>
+      <p>&copy; 2026 CrescerVerde | Plataforma de Sustentabilidade</p>
+    </footer>
+
+    <!-- VLibras -->
+    <div vw class="enabled">
+      <div vw-access-button class="active"></div>
+      <div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div>
+    </div>
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"    integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    <script src="/JS/config.js"></script>
+    <script src="/JS/global.js"></script>
+    <script src="/JS/perfil.js"></script>
+    <script src="/JS/auth-sync.js"></script>
+    <script src="/JS/terms-modal.js"></script>
+  </body>
+</html>

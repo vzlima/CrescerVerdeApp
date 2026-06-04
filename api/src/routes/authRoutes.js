@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const rateLimit = require('express-rate-limit');
 const authController = require('../controllers/authController');
+const authMiddleware = require('../middlewares/authMiddleware');
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -27,9 +28,10 @@ const registerLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-router.post('/register', registerLimiter, authController.register);
-router.post('/login', loginLimiter, authController.login);
-router.post('/forgot-password', forgotLimiter, authController.forgotPassword);
-router.post('/reset-password', authController.resetPassword);
+router.post('/register',       registerLimiter, authController.register);
+router.post('/login',          loginLimiter,    authController.login);
+router.post('/forgot-password', forgotLimiter,  authController.forgotPassword);
+router.post('/reset-password',                  authController.resetPassword);
+router.post('/logout',         authMiddleware,  authController.logout);
 
 module.exports = router;

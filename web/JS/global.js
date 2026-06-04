@@ -238,3 +238,43 @@ function showSessionWarning(minutesLeft) {
     window.location.href = "/HTML/login.html";
   });
 }
+
+/* ── Modal de confirmação (substitui confirm()) ── */
+window.cvConfirm = function (message, onConfirm, opts = {}) {
+  const existing = document.getElementById("cv-confirm-modal");
+  if (existing) existing.remove();
+
+  const icon       = opts.icon       || "fa-triangle-exclamation";
+  const iconColor  = opts.iconColor  || "#e65100";
+  const confirmTxt = opts.confirmTxt || "Confirmar";
+  const confirmCls = opts.confirmCls || "btn-danger";
+
+  const html = `
+    <div class="modal fade" id="cv-confirm-modal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content border-0 rounded-4 shadow">
+          <div class="modal-body text-center p-4">
+            <div style="font-size:2.2rem;color:${iconColor};margin-bottom:14px;">
+              <i class="fas ${icon}"></i>
+            </div>
+            <p class="fw-semibold mb-4" style="font-size:0.95rem;color:#333;">${message}</p>
+            <div class="d-flex gap-2 justify-content-center">
+              <button id="cv-confirm-cancel" class="btn btn-light px-4 rounded-pill" data-bs-dismiss="modal">Cancelar</button>
+              <button id="cv-confirm-ok"     class="btn ${confirmCls} px-4 rounded-pill">${confirmTxt}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+  document.body.insertAdjacentHTML("beforeend", html);
+  const modalEl = document.getElementById("cv-confirm-modal");
+  const modal   = new bootstrap.Modal(modalEl);
+
+  document.getElementById("cv-confirm-ok").addEventListener("click", () => {
+    modal.hide();
+    onConfirm();
+  });
+  modalEl.addEventListener("hidden.bs.modal", () => modalEl.remove());
+  modal.show();
+};

@@ -5,9 +5,10 @@ const authMiddleware = require('../middlewares/authMiddleware');
 
 router.use(authMiddleware);
 
-router.post('/addContent', courseProgressController.addContent);
+router.post('/addContent',  courseProgressController.addContent);
 router.post('/removeContent', courseProgressController.removeContent);
-router.post('/update', courseProgressController.update);
-router.post('/get', courseProgressController.get);
+router.post('/update',      courseProgressController.update);
+router.post('/get',         courseProgressController.get);
+router.post('/open',        courseProgressController.open);
 
 module.exports = router;
