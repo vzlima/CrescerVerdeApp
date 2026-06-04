@@ -37,16 +37,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("contentForm").addEventListener("submit", handleContentSubmit);
 
-  // Listener for Game Completion events
+  // Listener for Game Completion events — aceita string legada E objeto {type}
   window.addEventListener("message", (event) => {
-    if (event.data === "GAME_COMPLETED") {
-      const btn = document.getElementById("mark-completed-btn");
-      if (btn && btn.textContent.includes("Pendente")) {
-        btn.disabled = false;
-        btn.textContent = "Marcar como Concluído";
-        btn.classList.remove("btn-warning");
-        btn.classList.add("btn-success");
-      }
+    const d = event.data;
+    const isComplete = d === "GAME_COMPLETED"
+      || (d && (d.type === "GAME_COMPLETE" || d.type === "GAME_COMPLETED"));
+    if (!isComplete) return;
+
+    const btn = document.getElementById("mark-completed-btn");
+    if (btn && btn.disabled === false) return; // já habilitado
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = "Marcar como Concluído";
+      btn.classList.remove("btn-warning", "btn-secondary");
+      btn.classList.add("btn-success");
     }
   });
 });
