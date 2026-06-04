@@ -104,6 +104,11 @@ async function loadContentsAndProgress() {
 
     renderContentList();
     checkFullCompletion();
+
+    // Auto-seleciona o conteúdo se há apenas um (ex: trilhas com 1 jogo)
+    if (!isAdmin && courseContents.length === 1) {
+      window.selectContent(courseContents[0]._id);
+    }
   } catch (err) {
     console.error("Erro ao carregar conteúdos/progresso:", err);
   }
@@ -207,16 +212,14 @@ window.selectContent = function (contentId) {
       btn.textContent = "Concluído";
       btn.className = "btn btn-secondary";
       btn.disabled = true;
+    } else if (content.type === 'game') {
+      btn.textContent = "Complete o jogo para concluir";
+      btn.className = "btn btn-warning";
+      btn.disabled = true;
     } else {
-      if (content.type === 'game') {
-        btn.textContent = "Marcar como Concluído";
-        btn.className = "btn btn-success";
-        btn.disabled = false;
-      } else {
-        btn.textContent = "Marcar como Concluído";
-        btn.className = "btn btn-success";
-        btn.disabled = false;
-      }
+      btn.textContent = "Marcar como Concluído";
+      btn.className = "btn btn-success";
+      btn.disabled = false;
     }
   }
 };

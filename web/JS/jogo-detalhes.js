@@ -113,6 +113,11 @@ async function loadContentsAndProgress() {
 
     renderContentList();
     checkFullCompletion();
+
+    // Auto-seleciona o conteúdo se há apenas um (ex: trilhas com 1 jogo)
+    if (!isAdmin && courseContents.length === 1) {
+      window.selectContent(courseContents[0]._id);
+    }
   } catch (err) {
     // silently ignore — content list stays in last-known state
   }
@@ -215,6 +220,11 @@ window.selectContent = function (contentId) {
     if (isCompleted) {
       btn.textContent = "Concluído";
       btn.className = "btn btn-secondary";
+      btn.disabled = true;
+    } else if (content.type === 'game') {
+      // Para jogos: aguarda postMessage do iframe antes de habilitar
+      btn.textContent = "Complete o jogo para concluir";
+      btn.className = "btn btn-warning";
       btn.disabled = true;
     } else {
       btn.textContent = "Marcar como Concluído";
